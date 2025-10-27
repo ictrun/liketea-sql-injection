@@ -4,7 +4,7 @@
 
 #### Description
 
-A critical SQL injection vulnerability exists in the store listing API endpoint that allows unauthenticated attackers to execute arbitrary SQL commands. User-supplied latitude and longitude parameters are directly concatenated into a raw SQL query without sanitization or parameterization.
+Liketea (https://github.com/cameasy/liketea) is an open-source Multi-store tea beverage mini program (chain store version). A critical SQL injection vulnerability exists in the store listing API endpoint that allows unauthenticated attackers to execute arbitrary SQL commands. User-supplied latitude and longitude parameters are directly concatenated into a raw SQL query without sanitization or parameterization.
 
 #### Affected Component
 
